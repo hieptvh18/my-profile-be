@@ -5,16 +5,21 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon --inspect app.js",
+    "watch": "node-sass --watch src/resources/scss/app.scss src/public/css/app.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "hieptvh",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "hbs": "^4.2.0",
+    "mongoose": "^6.9.1"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.20"
+    "node-sass": "^8.0.0",
+    "nodemon": "^2.0.20",
+    "sass": "^1.58.1"
   }
 }
