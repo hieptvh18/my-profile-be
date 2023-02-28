@@ -2,13 +2,20 @@ import Contact from "../models/Contact.js";
 
 export class ContactController {
   list(req, res, next) {
+    var dataResponse = {
+        message:"Contact list data",
+        data:[]
+    };
     Contact.find({})
-    .then(response=>res.send(response))
-    .catch(err=>{
-        console.log('err'+ err)
+      .then((response) => {
+        dataResponse.data = response;
+        res.send(dataResponse);
+      })
+      .catch((err) => {
         res.status(500);
-        res.err;
-    })
+        dataResponse.message = err;
+        res.send(dataResponse);
+      });
   }
 
   create(req, res, next) {
@@ -17,7 +24,7 @@ export class ContactController {
       email: "hieptvh18@gmail.com",
       phone: "",
       title: "Reply mail test",
-      message: "Hello ban adasadsadasdadasdasdasdasdasd",
+      message: "We are hiring ",
     })
       .save()
       .then((res) => {
@@ -25,7 +32,7 @@ export class ContactController {
       })
       .catch((err) => {
         res.status(500);
-        console.log('err'+ err);
+        console.log("err" + err);
       });
   }
 

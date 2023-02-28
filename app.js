@@ -11,6 +11,13 @@ const port = 5000
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// access cors
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // config load tài nguyên trong public
 app.use(express.static(path.join(__dirname, 'src/public')))
 
