@@ -8,18 +8,20 @@ const authController = new AuthController;
 const contactController = new ContactController;
 
 // route auth
-apiRouter.post('/v1/login-post',authController.loginPost);
+apiRouter.post('/login-post',authController.loginPost);
 apiRouter.get('/get-user',authController.getUser);
-// apiRouter.get('/create-user',authController.createUser);
+apiRouter.get('/create-user',authController.createUser);
 
 // route contact
 // apiRouter.get('/create-contact',contactController.create);
 apiRouter.get('/list-all-contact',contactController.list);
+apiRouter.post('/reply-email-contact',contactController.reply);
+apiRouter.post('/create-contact',contactController.create);
 
 apiRouter.get('/cron',()=>{
     cron.schedule('* * * * *', ()=>{
         console.log('logger cron');
     })
-})
+});
 
 export default apiRouter;

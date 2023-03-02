@@ -1,61 +1,108 @@
 import User from "../models/User.js";
+import * as bcrypt from "bcrypt";
+import { hashPassword } from "../../utils/index.js";
 
 export class AuthController {
+  
   /**
    * login post action
    */
-  loginPost(req, res, next) {
-    
+  async loginPost(req, res, next) {
+    const {email,password} = req.body;
+
+    const user = await User.findOne({email});
+    if(!user){
+      return res.json({status:"Error",message:"User not found!"});
+    }
+    if(await bcrypt.compare(password,user.password)){
+      const token = jwt.sign({email: user.email},JWT_SCRET);
+
+      if(res.status(201)){
+        return res.json({status: 'success',message:"Login success",data:token});
+      }else{
+        return res.json({error: "error"});
+      }
+    }
+
+    return res.json({status:"Error",message:"Invalid password",data:""});
   }
 
   /**
    * api get user
-   * @param {*} req 
-   * @param {*} res 
-   * @param {*} next 
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
    */
   getUser(req, res, next) {
-    let user = User.findOne({})
-      .then((response) => res.send(response))
+    var dataResponse = {
+      status:"success",
+      message: "User infomation",
+      data: [],
+    };
+    User.findOne({})
+      .then((response) => {
+        dataResponse.data = response;
+        res.send(dataResponse);
+      })
       .catch((err) => {
-        res.status(500)
-        res.send(err);
+        dataResponse.status = "Error";
+        dataResponse.message = "Error "+err;
+        res.status(500);
+        res.send(dataResponse);
       });
   }
 
   /**
    * api edit user
-   * @param {*} res 
-   * @param {*} res 
-   * @param {*} next 
+   * @param {*} res
+   * @param {*} res
+   * @param {*} next
    */
-  updateUser(req,res,next){
+  updateUser(req, res, next) {
     let formData = req.body;
-    User.updateOne({_id:req.params.id},formData)
-        .then(()=>{
-            res.status(201)
-            res.send({'message':'update success'})
-        })
-        .catch(next)
-  }
-
-  createUser(req, res, next) {
-    let user = new User({
-      name: "Hiep tran",
-      avatar: "",
-      age: 21,
-      email: "hieptvh@gmail.com",
-      address: "Ha tinh",
-    });
-    user
-      .save()
-      .then((res) => {
-        console.log("add success customer");
+    User.updateOne({ _id: req.params.id }, formData)
+      .then(() => {
+        res.status(201);
+        res.send({ message: "update success" });
       })
-      .catch((er) => {
-        console.log(er);
-      });
-
-    console.log("auth controller");
+      .catch(next);
   }
+
+
+  async createUser(req, res, next) {
+    const pass = await bcrypt.hash('123123',10);
+
+    User.updateOne(
+      { _id: "63fcc86682867b40a8e4a0c8" },
+      {
+        name: "Hiep tran1",
+        avatar: "a.png",
+        age: 21,
+        email: "hieptvh@gmail.com",
+        address: "Ha tinh",
+        phone:"091232111",
+        password: pass,
+        social_link:{
+          "fb":"https://facebook.com/tvhh",
+          "email": "hieptvh18@gmail.com"
+        }
+      }
+    )
+      .then(() => {
+        res.status(201);
+        res.send({ status :"Success",message: "update success" });
+      })
+      .catch(next);
+    // }
+  }
+
+  /**
+   * upload file image from react to cloudainry
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  uploadFile(req, res, next) {}
+
+  
 }

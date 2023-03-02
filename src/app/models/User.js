@@ -12,7 +12,7 @@ const User = new Schema({
     phone:{type:String, required: false,max:11},
     address:{type:String, required: false},
     cv:{type:String, required: false},
-    social_link:{type:String, required:false}// save type json: example({facebook: 'https://facebook.com/tvhh',...})
+    social_link:{type:Object, required:false}// save type json: example({facebook: 'https://facebook.com/tvhh',...})
 },{timestamps:true});
 
 export default mongoose.model('User',User);

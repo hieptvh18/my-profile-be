@@ -5,11 +5,15 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import route from './src/routes/index.js';
 import connectDB from './src/configs/database/index.js';
+import * as dotenv from 'dotenv';
 const app = express()
-const port = 5000
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// use env file
+dotenv.config();
+const port = process.env.PORT
 
 // access cors
 app.use(function(req, res, next) {
