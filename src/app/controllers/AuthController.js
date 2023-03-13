@@ -1,30 +1,39 @@
 import User from "../models/User.js";
 import * as bcrypt from "bcrypt";
-import { hashPassword } from "../../utils/index.js";
+import pkg from 'jsonwebtoken';
+const { sign,verify } = pkg;
 
 export class AuthController {
-  
   /**
    * login post action
    */
   async loginPost(req, res, next) {
-    const {email,password} = req.body;
+    try{
+      const { email, password } = req.body;
 
-    const user = await User.findOne({email});
-    if(!user){
-      return res.json({status:"Error",message:"User not found!"});
-    }
-    if(await bcrypt.compare(password,user.password)){
-      const token = jwt.sign({email: user.email},JWT_SCRET);
+      const user = await User.findOne({ email});
+  
+      if (!user) return res.json({ status: "error", message: "User not found!" });
+  
+      if (await bcrypt.compare(password, user.password)) {
+        const token = sign({ email: user.email }, process.env.JWT_SCRET,{expiresIn:process.env.TOKEN_EXPIRATION});
 
-      if(res.status(201)){
-        return res.json({status: 'success',message:"Login success",data:token});
-      }else{
-        return res.json({error: "error"});
+        if (res.status(201)) {
+          return res.json({
+            status: "success",
+            message: "Login success",
+            token: token,
+          });
+        } else {
+          return res.json({ status: "error",message: "error" });
+        }
       }
+    }catch(err){
+      console.log(err);
+      return res.json({status:"error",message:"Error!Try again!"});
     }
 
-    return res.json({status:"Error",message:"Invalid password",data:""});
+    return res.json({ status: "error", message: "Invalid password", data: "" });
   }
 
   /**
@@ -35,7 +44,7 @@ export class AuthController {
    */
   getUser(req, res, next) {
     var dataResponse = {
-      status:"success",
+      status: "success",
       message: "User infomation",
       data: [],
     };
@@ -46,7 +55,7 @@ export class AuthController {
       })
       .catch((err) => {
         dataResponse.status = "Error";
-        dataResponse.message = "Error "+err;
+        dataResponse.message = "Error " + err;
         res.status(500);
         res.send(dataResponse);
       });
@@ -68,9 +77,8 @@ export class AuthController {
       .catch(next);
   }
 
-
   async createUser(req, res, next) {
-    const pass = await bcrypt.hash('123123',10);
+    const pass = await bcrypt.hash("123123", 10);
 
     User.updateOne(
       { _id: "63fcc86682867b40a8e4a0c8" },
@@ -80,17 +88,17 @@ export class AuthController {
         age: 21,
         email: "hieptvh@gmail.com",
         address: "Ha tinh",
-        phone:"091232111",
+        phone: "091232111",
         password: pass,
-        social_link:{
-          "fb":"https://facebook.com/tvhh",
-          "email": "hieptvh18@gmail.com"
-        }
+        social_link: {
+          fb: "https://facebook.com/tvhh",
+          email: "hieptvh18@gmail.com",
+        },
       }
     )
       .then(() => {
         res.status(201);
-        res.send({ status :"Success",message: "update success" });
+        res.send({ status: "Success", message: "update success" });
       })
       .catch(next);
     // }
@@ -103,6 +111,4 @@ export class AuthController {
    * @param {*} next
    */
   uploadFile(req, res, next) {}
-
-  
 }

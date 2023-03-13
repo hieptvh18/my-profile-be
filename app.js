@@ -15,6 +15,9 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 const port = process.env.PORT
 
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 // access cors
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
