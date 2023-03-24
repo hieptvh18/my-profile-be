@@ -36,6 +36,11 @@ export class AuthController {
     return res.json({ status: "error", message: "Invalid password", data: "" });
   }
 
+  verifyTokenLogin(req,res,next){
+    const token = req.header.token;
+    
+  }
+
   /**
    * api get user
    * @param {*} req
@@ -69,12 +74,21 @@ export class AuthController {
    */
   updateUser(req, res, next) {
     let formData = req.body;
-    User.updateOne({ _id: req.params.id }, formData)
-      .then(() => {
+    var dataResponse = {
+      status: "success",
+      message: "Update user infomation successfully!",
+      data: [],
+    };
+    User.updateOne({ email: req.body.email }, formData)
+      .then((response) => {
+        dataResponse.data = response; 
         res.status(201);
-        res.send({ message: "update success" });
+        res.send(dataResponse);
       })
-      .catch(next);
+      .catch(err=>{
+        dataResponse.status = 'error';
+        dataResponse.message = 'Error in processing save!';
+      });
   }
 
   async createUser(req, res, next) {

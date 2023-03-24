@@ -10,7 +10,8 @@ const contactController = new ContactController;
 // route auth
 apiRouter.post('/login-post',authController.loginPost);
 apiRouter.get('/get-user',authController.getUser);
-apiRouter.get('/create-user',authController.createUser);
+apiRouter.post('/update-user',authController.updateUser);
+// apiRouter.get('/create-user',authController.createUser);
 
 // route contact
 // apiRouter.get('/create-contact',contactController.create);

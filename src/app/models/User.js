@@ -8,7 +8,7 @@ const User = new Schema({
     avatar:{type:String, required: false, trim: true},
     age:{type:Number, required: false},
     email:{type:String, required: true},
-    password:{type:String, required: true},
+    password:{type:String, required: false},
     phone:{type:String, required: false,max:11},
     address:{type:String, required: false},
     cv:{type:String, required: false},
