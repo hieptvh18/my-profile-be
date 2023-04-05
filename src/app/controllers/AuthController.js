@@ -16,7 +16,7 @@ export class AuthController {
       if (!user) return res.json({ status: "error", message: "User not found!" });
   
       if (await bcrypt.compare(password, user.password)) {
-        const token = sign({ email: user.email }, process.env.JWT_SCRET,{expiresIn:process.env.TOKEN_EXPIRATION});
+        const token = sign({ email: user.email }, process.env.JWT_SCRET,{expiresIn:process.env.TOKEN_EXPIRATION}); // han sdung token:
 
         if (res.status(201)) {
           return res.json({
@@ -37,8 +37,11 @@ export class AuthController {
   }
 
   verifyTokenLogin(req,res,next){
-    const token = req.header.token;
-    
+    // const dataToken = verify(token,scret,function(err,data){
+    //   if(err) return err;
+    //   else return data;
+    // });
+    // return dataToken && dataToken;
   }
 
   /**
@@ -74,12 +77,13 @@ export class AuthController {
    */
   updateUser(req, res, next) {
     let formData = req.body;
+    const userId = '63fcc86682867b40a8e4a0c8';
     var dataResponse = {
       status: "success",
       message: "Update user infomation successfully!",
       data: [],
     };
-    User.updateOne({ email: req.body.email }, formData)
+    User.updateOne({ _id: userId }, formData)
       .then((response) => {
         dataResponse.data = response; 
         res.status(201);

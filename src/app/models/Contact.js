@@ -11,7 +11,7 @@ const Contact = new Schema({
     message:{type:String,required:true},
     message_reply:{type:String,required:true},
     is_reply:{type:Number,required:false, default:0}
-},{timestamps:true});
+},{collection:'contacts'},{timestamps:true});
 
 export default mongoose.model('Contact',Contact);
 

@@ -14,6 +14,6 @@ const User = new Schema({
     cv:{type:String, required: false},
     social_link:{type:Object, required:false},// save type json: example({facebook: 'https://facebook.com/tvhh',...})
     tokens:{type:String}
-},{timestamps:true});
+},{collection:'users'},{timestamps:true});
 
 export default mongoose.model('User',User);
