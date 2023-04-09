@@ -9,6 +9,6 @@ const Skill = new Schema({
     short_desc:{type:String},
     description:{type:String},
     point:{type:Number, requird:true}// diem so, danh gia trinh do dc bao nhieu
-},{timestamps:true});
+},{collection: 'skills'},{timestamps:true});
 
 export default mongoose.model('Skill',Skill);

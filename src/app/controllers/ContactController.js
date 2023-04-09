@@ -2,11 +2,10 @@ import Contact from "../models/Contact.js";
 import { transporter } from "../../configs/email/index.js";
 
 export class ContactController {
-  
   list(req, res, next) {
     var dataResponse = {
-        message:"Contact list data",
-        data:[]
+      message: "Contact list data",
+      data: [],
     };
     Contact.find({})
       .then((response) => {
@@ -20,47 +19,109 @@ export class ContactController {
       });
   }
 
-  create(req, res, next) {
-    // const formData = req.body;
-    console.log(req.body);
-    res.send(req.body);
-    
-    // let contact = new Contact(formData)
-    //   .save()
-    //   .then((res) => {
-    //     res.send('add success contact');
-    //     console.log("add contact success ");
-    //   })
-    //   .catch((err) => {
-    //     res.status(500);
-    //     res.send('add fail contact '+ err);
-    //     console.log("err" + err);
-    //   });
-  }
-
-  edit(req, res, next) {}
 
   /**
-   * send email reply
+   * create contact
    * @param {*} req 
    * @param {*} res 
    * @param {*} next 
    */
-  reply(req, res, next) {
-    // const mailOptions = {
-    //   from: 'hieptvh18@gmail.com',
-    //   to: 'hieptvh18@gmail.com',
-    //   subject: 'Sending Email using Node.js',
-    //   text: 'That was easy!'
-    // }
+  create(req, res, next) {
+    const formData = req.body;
 
-    // transporter.sendMail(mailOptions,(error,info)=>{
-    //   if (error) {
-    //     console.log(error);
-    //   } else {
-    //     console.log('Email sent: ' + info.response);
-    //   }
-    // })
+    let contact = new Contact(formData)
+      .save()
+      .then((response) => {
+        res.json({
+          status: "success",
+          message: "Create contact success!",
+          data: response,
+        });
+      })
+      .catch((err) => {
+        res.status(500);
+        res.json({
+          status: "error",
+          message: "Create contact is error" + err,
+          data: [],
+        });
+      });
+  }
+
+  /**
+   * update contact
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   */
+  edit(req, res, next) {
+    const formData = req.body;
+
+    let contact = Contact.updateOne({ _id: formData._id }, formData)
+      .then((response) => {
+        res.json({
+          status: "success",
+          message: "Update contact success!",
+          data: response,
+        });
+      })
+      .catch((err) => {
+        res.json({
+          status: "error",
+          message: "Create contact error!",
+          data: [],
+        });
+      });
+  }
+
+  /**
+   * delete contact
+   * @param {*} req 
+   * @param {*} res 
+   * @param {*} next 
+   */
+  delete(req, res, next){
+    const _id = req.params._id;
+
+    Contact.deleteOne({_id:_id})
+    .then(response=>{
+        res.json({
+          status:'success',
+          message:"Delete sucess!",
+          data:response
+        })
+    })
+    .catch(err=>{
+      res.json({
+        status:'error',
+        message:"Delete error: "+err,
+        data:[]
+      })
+    })
+  }
+
+  /**
+   * send email reply
+   * @param {*} req
+   * @param {*} res
+   * @param {*} next
+   */
+  reply(req, res, next) {
+    const mailOptions = {
+      from: process.env.MAIL_USERNAME,
+      to: 'hieptvh18@gmail.com',
+      subject: 'Sending Email using Node.js',
+      html: '<h1>That was easy!</h1>',
+      text: 'hihihi'
+    }
+
+    transporter.sendMail(mailOptions,(error,info)=>{
+      if (error) {
+        res.send(error);
+      } else {
+        res.send('Email sent: ' + info.response);
+      }
+    })
     console.log(transporter);
   }
 }

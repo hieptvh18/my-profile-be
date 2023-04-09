@@ -9,7 +9,7 @@ const Contact = new Schema({
     phone:{type:String,required:false, trim:true},
     title:{type:String,required:true},
     message:{type:String,required:true},
-    message_reply:{type:String,required:true},
+    message_reply:{type:String,required:false},
     is_reply:{type:Number,required:false, default:0}
 },{collection:'contacts'},{timestamps:true});
 

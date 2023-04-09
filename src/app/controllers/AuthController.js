@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import * as bcrypt from "bcrypt";
 import pkg from 'jsonwebtoken';
+
 const { sign,verify } = pkg;
 
 export class AuthController {
@@ -16,7 +17,7 @@ export class AuthController {
       if (!user) return res.json({ status: "error", message: "User not found!" });
   
       if (await bcrypt.compare(password, user.password)) {
-        const token = sign({ email: user.email }, process.env.JWT_SCRET,{expiresIn:process.env.TOKEN_EXPIRATION}); // han sdung token:
+        const token = sign({ _id: user._id }, process.env.JWT_SCRET,{expiresIn:process.env.TOKEN_EXPIRATION}); // han sdung token:
 
         if (res.status(201)) {
           return res.json({
@@ -34,14 +35,6 @@ export class AuthController {
     }
 
     return res.json({ status: "error", message: "Invalid password", data: "" });
-  }
-
-  verifyTokenLogin(req,res,next){
-    // const dataToken = verify(token,scret,function(err,data){
-    //   if(err) return err;
-    //   else return data;
-    // });
-    // return dataToken && dataToken;
   }
 
   /**
@@ -77,7 +70,7 @@ export class AuthController {
    */
   updateUser(req, res, next) {
     let formData = req.body;
-    const userId = '63fcc86682867b40a8e4a0c8';
+    const userId = '63fcc86682867b40a8e4a0c8'; // admin ID default
     var dataResponse = {
       status: "success",
       message: "Update user infomation successfully!",
